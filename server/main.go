@@ -14,8 +14,8 @@ import (
 //go:generate go mod tidy
 //go:generate go mod download
 
-// @title                       Gin-Vue-Admin Swagger API接口文档
-// @version                     v2.6.7
+// @title                       cms-gva Swagger API接口文档
+// @version                     v0.0.1
 // @description                 使用gin+vue进行极速开发的全栈开发基础平台
 // @securityDefinitions.apikey  ApiKeyAuth
 // @in                          header
