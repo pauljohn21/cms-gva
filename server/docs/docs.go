@@ -165,6 +165,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/enterSyncApi": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "确认同步API",
+                "responses": {
+                    "200": {
+                        "description": "确认同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/freshCasbin": {
             "get": {
                 "consumes": [
@@ -291,6 +330,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/getApiGroups": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "获取API分组",
+                "responses": {
+                    "200": {
+                        "description": "获取API分组",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/getApiList": {
             "post": {
                 "security": [
@@ -333,6 +411,84 @@ const docTemplate = `{
                                         "data": {
                                             "$ref": "#/definitions/response.PageResult"
                                         },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ignoreApi": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IgnoreApi"
+                ],
+                "summary": "忽略API",
+                "responses": {
+                    "200": {
+                        "description": "同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/syncApi": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysApi"
+                ],
+                "summary": "同步API",
+                "responses": {
+                    "200": {
+                        "description": "同步API",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
                                         "msg": {
                                             "type": "string"
                                         }
@@ -5138,6 +5294,9 @@ const docTemplate = `{
         "config.Autocode": {
             "type": "object",
             "properties": {
+                "ai-path": {
+                    "type": "string"
+                },
                 "root": {
                     "type": "string"
                 },
@@ -5746,7 +5905,7 @@ const docTemplate = `{
                     }
                 },
                 "email": {
-                    "$ref": "#/definitions/github_com_flipped-aurora_gin-vue-admin_server_config.Email"
+                    "$ref": "#/definitions/github_com_pauljohn21_cms-gva_server_config.Email"
                 },
                 "excel": {
                     "$ref": "#/definitions/config.Excel"
@@ -6170,7 +6329,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_flipped-aurora_gin-vue-admin_server_config.Email": {
+        "github_com_pauljohn21_cms-gva_server_config.Email": {
             "type": "object",
             "properties": {
                 "from": {
@@ -7617,11 +7776,11 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "v2.6.7",
+	Version:          "v0.0.1",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Gin-Vue-Admin Swagger API接口文档",
+	Title:            "cms-gva Swagger API接口文档",
 	Description:      "使用gin+vue进行极速开发的全栈开发基础平台",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

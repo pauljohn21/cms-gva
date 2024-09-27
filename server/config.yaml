@@ -110,28 +110,7 @@ pgsql:
   max-open-conns: 100
   log-mode: ""
   log-zap: false
-oracle:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-mssql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
+
 sqlite:
   path: ""
   port: ""

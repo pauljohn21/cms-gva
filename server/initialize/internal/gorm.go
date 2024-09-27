@@ -17,7 +17,7 @@ var Gorm = new(_gorm)
 type _gorm struct{}
 
 // Config gorm 自定义配置
-// Author [SliverHorn](https://github.com/SliverHorn)
+
 func (g *_gorm) Config(prefix string, singular bool) *gorm.Config {
 	var general config.GeneralDB
 	switch global.GVA_CONFIG.System.DbType {
@@ -25,12 +25,9 @@ func (g *_gorm) Config(prefix string, singular bool) *gorm.Config {
 		general = global.GVA_CONFIG.Mysql.GeneralDB
 	case "pgsql":
 		general = global.GVA_CONFIG.Pgsql.GeneralDB
-	case "oracle":
-		general = global.GVA_CONFIG.Oracle.GeneralDB
 	case "sqlite":
 		general = global.GVA_CONFIG.Sqlite.GeneralDB
-	case "mssql":
-		general = global.GVA_CONFIG.Mssql.GeneralDB
+
 	default:
 		general = global.GVA_CONFIG.Mysql.GeneralDB
 	}

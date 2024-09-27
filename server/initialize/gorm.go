@@ -17,12 +17,6 @@ func Gorm() *gorm.DB {
 		return GormMysql()
 	case "pgsql":
 		return GormPgSql()
-	case "oracle":
-		return GormOracle()
-	case "mssql":
-		return GormMssql()
-	case "sqlite":
-		return GormSqlite()
 	default:
 		return GormMysql()
 	}

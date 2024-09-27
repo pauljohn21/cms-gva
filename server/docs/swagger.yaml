@@ -16,6 +16,8 @@ definitions:
     type: object
   config.Autocode:
     properties:
+      ai-path:
+        type: string
       root:
         type: string
       server:
@@ -444,7 +446,7 @@ definitions:
           $ref: '#/definitions/config.DiskList'
         type: array
       email:
-        $ref: '#/definitions/github_com_flipped-aurora_gin-vue-admin_server_config.Email'
+        $ref: '#/definitions/github_com_pauljohn21_cms-gva_server_config.Email'
       excel:
         $ref: '#/definitions/config.Excel'
       hua-wei-obs:
@@ -740,7 +742,7 @@ definitions:
         description: 文件地址
         type: string
     type: object
-  github_com_flipped-aurora_gin-vue-admin_server_config.Email:
+  github_com_pauljohn21_cms-gva_server_config.Email:
     properties:
       from:
         description: 发件人  你自己要发邮件的邮箱
@@ -1744,8 +1746,8 @@ definitions:
 info:
   contact: {}
   description: 使用gin+vue进行极速开发的全栈开发基础平台
-  title: Gin-Vue-Admin Swagger API接口文档
-  version: v2.6.7
+  title: cms-gva Swagger API接口文档
+  version: v0.0.1
 paths:
   /api/createApi:
     post:
@@ -1831,6 +1833,27 @@ paths:
       summary: 删除选中Api
       tags:
       - SysApi
+  /api/enterSyncApi:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 确认同步API
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 确认同步API
+      tags:
+      - SysApi
   /api/freshCasbin:
     get:
       consumes:
@@ -1901,6 +1924,27 @@ paths:
       summary: 根据id获取api
       tags:
       - SysApi
+  /api/getApiGroups:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取API分组
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取API分组
+      tags:
+      - SysApi
   /api/getApiList:
     post:
       consumes:
@@ -1929,6 +1973,48 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 分页获取API列表
+      tags:
+      - SysApi
+  /api/ignoreApi:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 同步API
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 忽略API
+      tags:
+      - IgnoreApi
+  /api/syncApi:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 同步API
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 同步API
       tags:
       - SysApi
   /api/updateApi:
