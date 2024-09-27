@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
-	"github.com/qiniu/qmgo"
 
 	"github.com/pauljohn21/cms-gva/server/utils/timer"
 	"github.com/songzhibin97/gkit/cache/local_cache"
@@ -24,7 +23,6 @@ var (
 	GVA_DB     *gorm.DB
 	GVA_DBList map[string]*gorm.DB
 	GVA_REDIS  redis.UniversalClient
-	GVA_MONGO  *qmgo.QmgoClient
 	GVA_CONFIG config.Server
 	GVA_VP     *viper.Viper
 	// GVA_LOG    *oplogging.Logger

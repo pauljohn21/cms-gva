@@ -1,0 +1,2 @@
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:26:07.918	[31merror[0m	/Users/panglijun/go/src/cms-gva/server/core/server.go:41	accept tcp [::]:8888: use of closed network connection
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:34:29.477	[31merror[0m	/Users/panglijun/go/src/cms-gva/server/core/server.go:41	accept tcp [::]:8888: use of closed network connection

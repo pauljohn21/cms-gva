@@ -1,0 +1,6 @@
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:26:01.580	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/initialize/router.go:60	register swagger handler
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:26:01.581	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/initialize/router.go:108	router register success
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:26:01.582	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/core/server.go:33	server run success on 	{"address": ":8888"}
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:34:27.170	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/initialize/router.go:60	register swagger handler
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:34:27.172	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/initialize/router.go:108	router register success
+[github.com/pauljohn21/cms-gva/server]2024-09-27 22:34:27.172	[34minfo[0m	/Users/panglijun/go/src/cms-gva/server/core/server.go:33	server run success on 	{"address": ":8888"}
