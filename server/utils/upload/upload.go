@@ -25,10 +25,6 @@ func NewOss() OSS {
 		return &TencentCOS{}
 	case "aliyun-oss":
 		return &AliyunOSS{}
-	case "huawei-obs":
-		return HuaWeiObs
-	case "aws-s3":
-		return &AwsS3{}
 	default:
 		return &Local{}
 	}

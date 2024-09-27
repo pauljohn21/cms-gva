@@ -32,22 +32,7 @@ redis:
     - "172.21.0.2:7002"
 
 
-# mongo configuration
-mongo:
-  coll: ''
-  options: ''
-  database: ''
-  username: ''
-  password: ''
-  auth-source: ''
-  min-pool-size: 0
-  max-pool-size: 100
-  socket-timeout-ms: 0
-  connect-timeout-ms: 0
-  is-zap: false
-  hosts:
-    - host: ''
-      port: ''
+
 
 # email configuration
 email:
@@ -66,7 +51,6 @@ system:
   db-type: mysql
   oss-type: local # 控制oss选择走本地还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
   use-redis: false # 使用redis
-  use-mongo: false     # 使用mongo
   use-multipoint: false
   # IP限制次数 一个小时15000次
   iplimit-count: 15000
@@ -190,25 +174,11 @@ tencent-cos:
   base-url: https://gin.vue.admin
   path-prefix: github.com/pauljohn21/cms-gva/server
 
-# aws s3 configuration (minio compatible)
-aws-s3:
-  bucket: xxxxx-10005608
-  region: ap-shanghai
-  endpoint: ""
-  s3-force-path-style: false
-  disable-ssl: false
-  secret-id: your-secret-id
-  secret-key: your-secret-key
-  base-url: https://gin.vue.admin
-  path-prefix: github.com/pauljohn21/cms-gva/server
 
-# huawei obs configuration
-hua-wei-obs:
-  path: you-path
-  bucket: you-bucket
-  endpoint: you-endpoint
-  access-key: you-access-key
-  secret-key: you-secret-key
+esign:
+  base-url: https://smlopenapi.esign.cn
+  open-id: 7439012567
+  secret: c0d5ea7e936a53d515938cd5dabcba37
 
 # excel configuration
 excel:
