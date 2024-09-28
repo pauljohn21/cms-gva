@@ -1,4 +1,156 @@
 definitions:
+  cms.Applicant:
+    properties:
+      ID:
+        description: 主键ID
+        type: integer
+      code:
+        description: 统一社会信用代码
+        type: string
+      company:
+        description: 公司名
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        type: integer
+      deletedBy:
+        type: integer
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        type: integer
+    required:
+    - code
+    - company
+    type: object
+  cms.Contacts:
+    properties:
+      ID:
+        description: 主键ID
+        type: integer
+      addres:
+        description: 地址
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        type: integer
+      deletedBy:
+        type: integer
+      email:
+        description: 邮箱
+        type: string
+      name:
+        description: 姓名
+        type: string
+      phone:
+        description: 电话
+        type: integer
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        type: integer
+    required:
+    - name
+    - phone
+    type: object
+  cms.Court:
+    properties:
+      ID:
+        description: 主键ID
+        type: integer
+      addr:
+        description: 地址
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        type: integer
+      deletedBy:
+        type: integer
+      name:
+        description: 法院名
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        type: integer
+    required:
+    - addr
+    - name
+    type: object
+  cms.MeLetter:
+    properties:
+      ID:
+        description: 主键ID
+        type: integer
+      applicant:
+        description: 申请人
+        type: string
+      code:
+        description: 保单号
+        type: string
+      court:
+        description: 法院
+        type: string
+      coverage:
+        description: 保费
+        type: string
+      coverageAll:
+        description: 保额
+        type: string
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        type: integer
+      deletedBy:
+        type: integer
+      endCreatedAt:
+        description: 结束时间
+        type: string
+      fileID:
+        description: 文件id
+        type: string
+      info:
+        description: 保险信息
+        type: string
+      policyholder:
+        description: 投保人
+        type: string
+      respondent:
+        description: 被申请人
+        type: string
+      signStatus:
+        description: 签署状态
+        type: string
+      startCreatedAt:
+        description: 开始时间
+        type: string
+      templateFileUrl:
+        description: 文件下载
+        type: string
+      type:
+        description: 出单方式
+        type: string
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        type: integer
+    required:
+    - applicant
+    - court
+    - coverage
+    - coverageAll
+    type: object
   config.AliyunOSS:
     properties:
       access-key-id:
@@ -47,27 +199,6 @@ definitions:
       web-table:
         type: string
     type: object
-  config.AwsS3:
-    properties:
-      base-url:
-        type: string
-      bucket:
-        type: string
-      disable-ssl:
-        type: boolean
-      endpoint:
-        type: string
-      path-prefix:
-        type: string
-      region:
-        type: string
-      s3-force-path-style:
-        type: boolean
-      secret-id:
-        type: string
-      secret-key:
-        type: string
-    type: object
   config.CORS:
     properties:
       mode:
@@ -113,22 +244,18 @@ definitions:
       mount-point:
         type: string
     type: object
+  config.Esign:
+    properties:
+      base-url:
+        type: string
+      open-id:
+        type: string
+      secret:
+        type: string
+    type: object
   config.Excel:
     properties:
       dir:
-        type: string
-    type: object
-  config.HuaWeiObs:
-    properties:
-      access-key:
-        type: string
-      bucket:
-        type: string
-      endpoint:
-        type: string
-      path:
-        type: string
-      secret-key:
         type: string
     type: object
   config.JWT:
@@ -155,143 +282,7 @@ definitions:
         description: 本地文件存储路径
         type: string
     type: object
-  config.Mongo:
-    properties:
-      auth-source:
-        description: 验证数据库
-        type: string
-      coll:
-        description: collection name
-        type: string
-      connect-timeout-ms:
-        description: 连接超时时间
-        type: integer
-      database:
-        description: database name
-        type: string
-      hosts:
-        description: 主机列表
-        items:
-          $ref: '#/definitions/config.MongoHost'
-        type: array
-      is-zap:
-        description: 是否开启zap日志
-        type: boolean
-      max-pool-size:
-        description: 最大连接池
-        type: integer
-      min-pool-size:
-        description: 最小连接池
-        type: integer
-      options:
-        description: mongodb options
-        type: string
-      password:
-        description: 密码
-        type: string
-      socket-timeout-ms:
-        description: socket超时时间
-        type: integer
-      username:
-        description: 用户名
-        type: string
-    type: object
-  config.MongoHost:
-    properties:
-      host:
-        description: ip地址
-        type: string
-      port:
-        description: 端口
-        type: string
-    type: object
-  config.Mssql:
-    properties:
-      config:
-        description: 高级配置
-        type: string
-      db-name:
-        description: 数据库名
-        type: string
-      engine:
-        default: InnoDB
-        description: 数据库引擎，默认InnoDB
-        type: string
-      log-mode:
-        description: 是否开启Gorm全局日志
-        type: string
-      log-zap:
-        description: 是否通过zap写入日志文件
-        type: boolean
-      max-idle-conns:
-        description: 空闲中的最大连接数
-        type: integer
-      max-open-conns:
-        description: 打开到数据库的最大连接数
-        type: integer
-      password:
-        description: 数据库密码
-        type: string
-      path:
-        description: 数据库地址
-        type: string
-      port:
-        description: 数据库端口
-        type: string
-      prefix:
-        description: 数据库前缀
-        type: string
-      singular:
-        description: 是否开启全局禁用复数，true表示开启
-        type: boolean
-      username:
-        description: 数据库账号
-        type: string
-    type: object
   config.Mysql:
-    properties:
-      config:
-        description: 高级配置
-        type: string
-      db-name:
-        description: 数据库名
-        type: string
-      engine:
-        default: InnoDB
-        description: 数据库引擎，默认InnoDB
-        type: string
-      log-mode:
-        description: 是否开启Gorm全局日志
-        type: string
-      log-zap:
-        description: 是否通过zap写入日志文件
-        type: boolean
-      max-idle-conns:
-        description: 空闲中的最大连接数
-        type: integer
-      max-open-conns:
-        description: 打开到数据库的最大连接数
-        type: integer
-      password:
-        description: 数据库密码
-        type: string
-      path:
-        description: 数据库地址
-        type: string
-      port:
-        description: 数据库端口
-        type: string
-      prefix:
-        description: 数据库前缀
-        type: string
-      singular:
-        description: 是否开启全局禁用复数，true表示开启
-        type: boolean
-      username:
-        description: 数据库账号
-        type: string
-    type: object
-  config.Oracle:
     properties:
       config:
         description: 高级配置
@@ -429,8 +420,6 @@ definitions:
         allOf:
         - $ref: '#/definitions/config.Autocode'
         description: auto
-      aws-s3:
-        $ref: '#/definitions/config.AwsS3'
       captcha:
         $ref: '#/definitions/config.Captcha'
       cors:
@@ -449,24 +438,16 @@ definitions:
         $ref: '#/definitions/github_com_pauljohn21_cms-gva_server_config.Email'
       excel:
         $ref: '#/definitions/config.Excel'
-      hua-wei-obs:
-        $ref: '#/definitions/config.HuaWeiObs'
       jwt:
         $ref: '#/definitions/config.JWT'
       local:
         allOf:
         - $ref: '#/definitions/config.Local'
         description: oss
-      mongo:
-        $ref: '#/definitions/config.Mongo'
-      mssql:
-        $ref: '#/definitions/config.Mssql'
       mysql:
         allOf:
         - $ref: '#/definitions/config.Mysql'
         description: gorm
-      oracle:
-        $ref: '#/definitions/config.Oracle'
       pgsql:
         $ref: '#/definitions/config.Pgsql'
       qiniu:
@@ -479,6 +460,8 @@ definitions:
         $ref: '#/definitions/config.System'
       tencent-cos:
         $ref: '#/definitions/config.TencentCOS'
+      tesign:
+        $ref: '#/definitions/config.Esign'
       zap:
         $ref: '#/definitions/config.Zap'
     type: object
@@ -2045,6 +2028,251 @@ paths:
       summary: 修改基础api
       tags:
       - SysApi
+  /applicant/createApplicant:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 创建申请人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Applicant'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 创建申请人
+      tags:
+      - Applicant
+  /applicant/deleteApplicant:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 删除申请人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Applicant'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除申请人
+      tags:
+      - Applicant
+  /applicant/deleteApplicantByIds:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 批量删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除申请人
+      tags:
+      - Applicant
+  /applicant/findApplicant:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 主键ID
+        in: query
+        name: ID
+        type: integer
+      - description: 统一社会信用代码
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: 公司名
+        in: query
+        name: company
+        required: true
+        type: string
+      - description: 创建时间
+        in: query
+        name: createdAt
+        type: string
+      - in: query
+        name: createdBy
+        type: integer
+      - in: query
+        name: deletedBy
+        type: integer
+      - description: 更新时间
+        in: query
+        name: updatedAt
+        type: string
+      - in: query
+        name: updatedBy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  properties:
+                    reapplicant:
+                      $ref: '#/definitions/cms.Applicant'
+                  type: object
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用id查询申请人
+      tags:
+      - Applicant
+  /applicant/getApplicantList:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PageResult'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 分页获取申请人列表
+      tags:
+      - Applicant
+  /applicant/getApplicantPublic:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+                msg:
+                  type: string
+              type: object
+      summary: 不需要鉴权的申请人接口
+      tags:
+      - Applicant
+  /applicant/updateApplicant:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 更新申请人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Applicant'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新申请人
+      tags:
+      - Applicant
   /authority/copyAuthority:
     post:
       consumes:
@@ -2829,6 +3057,504 @@ paths:
       summary: 获取权限列表
       tags:
       - Casbin
+  /contacts/createContacts:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 创建联系人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Contacts'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 创建联系人
+      tags:
+      - Contacts
+  /contacts/deleteContacts:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 删除联系人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Contacts'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除联系人
+      tags:
+      - Contacts
+  /contacts/deleteContactsByIds:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 批量删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除联系人
+      tags:
+      - Contacts
+  /contacts/findContacts:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 主键ID
+        in: query
+        name: ID
+        type: integer
+      - description: 地址
+        in: query
+        name: addres
+        type: string
+      - description: 创建时间
+        in: query
+        name: createdAt
+        type: string
+      - in: query
+        name: createdBy
+        type: integer
+      - in: query
+        name: deletedBy
+        type: integer
+      - description: 邮箱
+        in: query
+        name: email
+        type: string
+      - description: 姓名
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: 电话
+        in: query
+        name: phone
+        required: true
+        type: integer
+      - description: 更新时间
+        in: query
+        name: updatedAt
+        type: string
+      - in: query
+        name: updatedBy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  properties:
+                    recontacts:
+                      $ref: '#/definitions/cms.Contacts'
+                  type: object
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用id查询联系人
+      tags:
+      - Contacts
+  /contacts/getContactsList:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PageResult'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 分页获取联系人列表
+      tags:
+      - Contacts
+  /contacts/getContactsPublic:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+                msg:
+                  type: string
+              type: object
+      summary: 不需要鉴权的联系人接口
+      tags:
+      - Contacts
+  /contacts/updateContacts:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 更新联系人
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Contacts'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新联系人
+      tags:
+      - Contacts
+  /court/createCourt:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 创建法院
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Court'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 创建法院
+      tags:
+      - Court
+  /court/deleteCourt:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 删除法院
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Court'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除法院
+      tags:
+      - Court
+  /court/deleteCourtByIds:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 批量删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除法院
+      tags:
+      - Court
+  /court/findCourt:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 主键ID
+        in: query
+        name: ID
+        type: integer
+      - description: 地址
+        in: query
+        name: addr
+        required: true
+        type: string
+      - description: 创建时间
+        in: query
+        name: createdAt
+        type: string
+      - in: query
+        name: createdBy
+        type: integer
+      - in: query
+        name: deletedBy
+        type: integer
+      - description: 法院名
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: 更新时间
+        in: query
+        name: updatedAt
+        type: string
+      - in: query
+        name: updatedBy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  properties:
+                    recourt:
+                      $ref: '#/definitions/cms.Court'
+                  type: object
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用id查询法院
+      tags:
+      - Court
+  /court/getCourtList:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PageResult'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 分页获取法院列表
+      tags:
+      - Court
+  /court/getCourtPublic:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+                msg:
+                  type: string
+              type: object
+      summary: 不需要鉴权的法院接口
+      tags:
+      - Court
+  /court/updateCourt:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 更新法院
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.Court'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新法院
+      tags:
+      - Court
   /customer/customer:
     delete:
       consumes:
@@ -3266,6 +3992,301 @@ paths:
       summary: jwt加入黑名单
       tags:
       - Jwt
+  /meLetter/createMeLetter:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 创建我的保函
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.MeLetter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 创建我的保函
+      tags:
+      - MeLetter
+  /meLetter/deleteMeLetter:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 删除我的保函
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.MeLetter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除我的保函
+      tags:
+      - MeLetter
+  /meLetter/deleteMeLetterByIds:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 批量删除成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 批量删除我的保函
+      tags:
+      - MeLetter
+  /meLetter/findMeLetter:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 主键ID
+        in: query
+        name: ID
+        type: integer
+      - description: 申请人
+        in: query
+        name: applicant
+        required: true
+        type: string
+      - description: 保单号
+        in: query
+        name: code
+        type: string
+      - description: 法院
+        in: query
+        name: court
+        required: true
+        type: string
+      - description: 保费
+        in: query
+        name: coverage
+        required: true
+        type: string
+      - description: 保额
+        in: query
+        name: coverageAll
+        required: true
+        type: string
+      - description: 创建时间
+        in: query
+        name: createdAt
+        type: string
+      - in: query
+        name: createdBy
+        type: integer
+      - in: query
+        name: deletedBy
+        type: integer
+      - description: 结束时间
+        in: query
+        name: endCreatedAt
+        type: string
+      - description: 文件id
+        in: query
+        name: fileID
+        type: string
+      - description: 保险信息
+        in: query
+        name: info
+        type: string
+      - description: 投保人
+        in: query
+        name: policyholder
+        type: string
+      - description: 被申请人
+        in: query
+        name: respondent
+        type: string
+      - description: 签署状态
+        in: query
+        name: signStatus
+        type: string
+      - description: 开始时间
+        in: query
+        name: startCreatedAt
+        type: string
+      - description: 文件下载
+        in: query
+        name: templateFileUrl
+        type: string
+      - description: 出单方式
+        in: query
+        name: type
+        type: string
+      - description: 更新时间
+        in: query
+        name: updatedAt
+        type: string
+      - in: query
+        name: updatedBy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  properties:
+                    remeLetter:
+                      $ref: '#/definitions/cms.MeLetter'
+                  type: object
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 用id查询我的保函
+      tags:
+      - MeLetter
+  /meLetter/getMeLetterList:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PageResult'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 分页获取我的保函列表
+      tags:
+      - MeLetter
+  /meLetter/getMeLetterPublic:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: endCreatedAt
+        type: string
+      - description: 关键字
+        in: query
+        name: keyword
+        type: string
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页大小
+        in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: startCreatedAt
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  type: object
+                msg:
+                  type: string
+              type: object
+      summary: 不需要鉴权的我的保函接口
+      tags:
+      - MeLetter
+  /meLetter/updateMeLetter:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 更新我的保函
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/cms.MeLetter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新我的保函
+      tags:
+      - MeLetter
   /menu/addBaseMenu:
     post:
       consumes:

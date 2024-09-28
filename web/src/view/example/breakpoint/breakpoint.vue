@@ -80,6 +80,7 @@ const waitNum = ref(NaN)
 const limitFileSize = ref(false)
 const percentage = ref(0)
 const percentageFlage = ref(true)
+const emit = defineEmits(['file-uploaded'])
 
 // 选中文件的函数
 const choseFile = async(e) => {
@@ -200,7 +201,10 @@ const upLoadFileSlice = async(item) => {
         fileMd5: fileMd5.value,
         filePath: res.data.filePath,
       }
+
       ElMessage.success('上传成功')
+      emit('file-uploaded', file.value.name)
+
       await removeChunk(params)
     }
   }

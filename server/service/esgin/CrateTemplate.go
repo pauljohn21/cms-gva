@@ -2,41 +2,39 @@ package esgin
 
 import (
 	"fmt"
+	"github.com/pauljohn21/cms-gva/server/global"
+	"github.com/pauljohn21/cms-gva/server/model/cms"
+	"github.com/pauljohn21/cms-gva/server/utils"
 	"log"
 	"os"
 	"path/filepath"
 
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/xuri/excelize/v2"
 
 	"github.com/Esword618/unioffice/document"
 	"github.com/Esword618/unioffice/schema/soo/wml"
-
-	cms "github.com/flipped-aurora/gin-vue-admin/server/model/cms"
 )
 
-func CrateTemplate(meLetter cms.MeLetter) {
+func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	fmt.Println("开始生成模板")
 	// 获取当前工作目录
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error getting current directory:", err)
-		return
+		return 0, err
 	}
 	// 拼接文件路径
-	dataPath := filepath.Join(currentDir, "../../fileDir", meLetter.Respondent)
+	dataPath := filepath.Join(currentDir, "fileDir", meLetter.Respondent)
 
 	data := readexecleToPerson(dataPath)
 	comName := meLetter.Applicant
-	// var applicant *cms.Applicant
-	// var comId string
-	// err = global.GVA_DB.Where("company = ?", comName).First(&applicant).Error
-	// if err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	comId = applicant.Code
-	// 	fmt.Println(comId)
-	// }
+	var applicant *cms.Applicant
+	//var comId string
+	err = global.GVA_DB.Where("company = ?", comName).First(&applicant).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("信用代码%s\n", applicant.Code)
 
 	var namelist string
 	for _, item := range data {
@@ -110,7 +108,7 @@ func CrateTemplate(meLetter cms.MeLetter) {
 	fyidf.AddTab()
 	fyidi := fyid.AddRun()
 	fyidi.Properties().SetBold(false)
-	fyidi.AddText("哈尔滨市道里区人民法院")
+	fyidi.AddText(meLetter.Court)
 
 	bcr := doc.AddParagraph()
 	bcr.Properties().SetAlignment(wml.ST_JcLeft)
@@ -121,7 +119,7 @@ func CrateTemplate(meLetter cms.MeLetter) {
 	bcrf.AddTab()
 	bcri := bcr.AddRun()
 	bcri.Properties().SetBold(false)
-	bcri.AddText(comName)
+	bcri.AddText(fmt.Sprintf("%s,证件类型: 统一社会信用代码,证件号码:%s", comName, applicant.Code))
 
 	bsqr := doc.AddParagraph()
 	bsqr.Properties().SetAlignment(wml.ST_JcLeft)
@@ -532,10 +530,11 @@ func CrateTemplate(meLetter cms.MeLetter) {
 	endpages := totalParagraphs - (pages * estimatedPages)
 	fmt.Println(endpages)
 
-	err = doc.SaveToFile("demo.docx")
+	err = doc.SaveToFile("resource/doc/demo.docx")
 	if err != nil {
-		log.Fatalln(err)
+		return 0, err
 	}
+	return estimatedPages, nil
 }
 
 type Person struct {

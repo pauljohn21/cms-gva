@@ -1,19 +1,12 @@
 package system
 
 import (
-	"fmt"
-	"github.com/pauljohn21/cms-gva/server/global"
-	"github.com/pauljohn21/cms-gva/server/model/system"
 	"testing"
+
+	"github.com/pauljohn21/cms-gva/server/service"
 )
 
-func TestUserId(t *testing.T) {
-	var user system.SysUser
-	err := global.GVA_DB.Where("id = ?", "1").First(&user).Error
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(user.ID)
-	}
-
+func TestSys(t *testing.T) {
+	userService := service.ServiceGroupApp.SystemServiceGroup
+	userService.FindUserById(1)
 }
