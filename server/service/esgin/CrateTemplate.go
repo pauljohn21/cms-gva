@@ -8,7 +8,6 @@ import (
 
 	"github.com/pauljohn21/cms-gva/server/global"
 	"github.com/pauljohn21/cms-gva/server/model/cms"
-	"github.com/pauljohn21/cms-gva/server/utils"
 
 	"github.com/xuri/excelize/v2"
 
@@ -42,9 +41,9 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	for _, item := range data {
 		namelist += fmt.Sprintf("%s,", item.Name)
 	}
-	bszh := utils.ConvertToChinese(meLetter.CoverageAll)
+	bszh := meLetter.Coverage
 	bszh_lower := meLetter.CoverageAll
-	bczrdata := fmt.Sprintf("财产保全保障人: %s与%s,因金融不良债权追偿纠纷案向法院提出财产保全申请,申请冻结被申请人名下价值人民币%s(小写:RMB %s)的银行存款,微信支付余额和微信支付功能,支付宝支付余额和支付宝支付功能以及其他等值货币资金如因申请人财产保全申请错误致使被申请人遭受经济损失,依法应由申请人承担的损害赔偿责任保险人承担连带赔偿责任,赔偿限额以人民币%s(小写: RMB %s)为限", comName, namelist, bszh, bszh_lower, bszh, bszh_lower)
+	bczrdata := fmt.Sprintf("财产保全保障人: %s与%s,因金融不良债权追偿纠纷案向法院提出财产保全申请,申请冻结被申请人名下价值人民币 %s(小写:RMB %s)的银行存款,微信支付余额和微信支付功能,支付宝支付余额和支付宝支付功能以及其他等值货币资金如因申请人财产保全申请错误致使被申请人遭受经济损失,依法应由申请人承担的损害赔偿责任保险人承担连带赔偿责任,赔偿限额以人民币 %s (小写: RMB %s)为限", comName, namelist, bszh, bszh_lower, bszh, bszh_lower)
 	tbrddata := `  	1.投保人/被保险人将诚实谨慎行使诉讼权利保证无恶意诉讼或虚假诉讼的故意且与被告、被申请人无恶意串通。包括但不限于:		
 	1.1 在合同有效期内保险标的的危险程度显著增加的（包括但不限于被申请人提供的证据足以推翻或动摇投保人/被保险人诉请的主要或关键事实的、一审法院作出不利于投保人/被保险人的判决等)，投保人/被保险人应当按照合同约定及时通知保险人；					
 	1.2 应当解除保全措施情况发生后投保人/被保险人应及时解除财产保全措施；												

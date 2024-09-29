@@ -2,10 +2,8 @@ package utils
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -81,56 +79,4 @@ func RandomString(n int) string {
 
 func RandomInt(min, max int) int {
 	return min + rand.Intn(max-min)
-}
-
-func ConvertToChinese(amount string) string {
-	digits := []string{"零", "一", "二", "三", "四", "五", "六", "七", "八", "九"}
-	units := []string{"元", "角", "分"}
-
-	// 解析金额字符串
-	parsedAmount, err := strconv.ParseFloat(amount, 64)
-	if err != nil {
-		return "无效金额：" + amount
-	}
-
-	// 分解整数部分和小数部分
-	intPart := math.Floor(parsedAmount)
-	fracPart := parsedAmount - intPart
-
-	// 转换整数部分
-	intStr := strconv.FormatFloat(intPart, 'f', -1, 64)
-	intResult := convertDigitsToInt(intStr, digits)
-
-	// 转换小数部分
-	fracStr := strconv.FormatFloat(fracPart*100, 'f', 2, 64)
-	fracStr = strings.TrimPrefix(fracStr, "0.")
-
-	// 转换小数部分为中文数字
-	fracResult := convertDigitsToInt(fracStr, digits)
-
-	// 合并结果
-	result := intResult
-	if len(fracResult) > 0 {
-		result += units[len(fracResult)] + fracResult
-	} else {
-		result += "整"
-	}
-
-	return result
-}
-
-// convertDigitsToInt converts a string of digits to its Chinese character representation.
-func convertDigitsToInt(digits string, digitsMap []string) string {
-	var result strings.Builder
-
-	for _, char := range digits {
-		digit, _ := strconv.Atoi(string(char))
-		if digit > 0 {
-			result.WriteString(digitsMap[digit])
-		} else if result.Len() > 0 {
-			result.WriteString(digitsMap[digit])
-		}
-	}
-
-	return result.String()
 }

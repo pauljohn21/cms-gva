@@ -11,11 +11,11 @@
         <el-form-item label="法院:" prop="court">
           <el-input v-model="formData.court" :clearable="true"  placeholder="请输入法院" />
        </el-form-item>
-        <el-form-item label="保费:" prop="coverage">
-          <el-input v-model="formData.coverage" :clearable="true"  placeholder="请输入保费" />
+        <el-form-item label="含税总保费:" prop="coverage">
+          <el-input v-model="formData.coverage" :clearable="true"  placeholder="请输入含税总保费" />
        </el-form-item>
-        <el-form-item label="保额:" prop="coverageAll">
-          <el-input v-model="formData.coverageAll" :clearable="true"  placeholder="请输入保额" />
+        <el-form-item label="保险金额:" prop="coverageAll">
+          <el-input v-model="formData.coverageAll" :clearable="true"  placeholder="请输入保险金额" />
        </el-form-item>
         <el-form-item label="结束时间:" prop="endCreatedAt">
           <el-date-picker v-model="formData.endCreatedAt" type="date" placeholder="选择日期" :clearable="true"></el-date-picker>
