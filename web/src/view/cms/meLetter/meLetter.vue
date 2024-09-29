@@ -120,7 +120,7 @@
 <!--              <el-input v-model="formData.policyholder" :clearable="true"  placeholder="请输入投保人" />-->
             </el-form-item>
             <el-form-item label="被申请人:"  prop="respondent" >
-              <BreakPoint @file-uploaded="onFileUploaded"/>
+              <UploadXlsx @on-success="onFileUploaded" />
 
               <el-input v-model="formData.respondent" :clearable="true"  placeholder="请输入被申请人" />
             </el-form-item>
@@ -177,6 +177,7 @@ import {getContactsList} from "@/api/cms/contacts";
 import {getApplicantList} from "@/api/cms/applicant";
 import {getCourtList} from "@/api/cms/court";
 import BreakPoint from '@/view/example/breakpoint/breakpoint.vue'
+import UploadXlsx from '@/components/upload/xlsx.vue'
 
 defineOptions({
     name: 'MeLetter'

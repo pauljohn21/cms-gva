@@ -2,12 +2,13 @@ package esgin
 
 import (
 	"fmt"
-	"github.com/pauljohn21/cms-gva/server/global"
-	"github.com/pauljohn21/cms-gva/server/model/cms"
-	"github.com/pauljohn21/cms-gva/server/utils"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/pauljohn21/cms-gva/server/global"
+	"github.com/pauljohn21/cms-gva/server/model/cms"
+	"github.com/pauljohn21/cms-gva/server/utils"
 
 	"github.com/xuri/excelize/v2"
 
@@ -24,12 +25,13 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 		return 0, err
 	}
 	// 拼接文件路径
-	dataPath := filepath.Join(currentDir, "fileDir", meLetter.Respondent)
+	dataPath := filepath.Join(currentDir, meLetter.Respondent)
+	fmt.Println(dataPath)
 
 	data := readexecleToPerson(dataPath)
 	comName := meLetter.Applicant
 	var applicant *cms.Applicant
-	//var comId string
+	// var comId string
 	err = global.GVA_DB.Where("company = ?", comName).First(&applicant).Error
 	if err != nil {
 		fmt.Println(err)
@@ -119,7 +121,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	bcrf.AddTab()
 	bcri := bcr.AddRun()
 	bcri.Properties().SetBold(false)
-	bcri.AddText(fmt.Sprintf("%s,证件类型: 统一社会信用代码,证件号码:%s", comName, applicant.Code))
+	bcri.AddText(fmt.Sprintf("%s, 				证件类型: 统一社会信用代码, 证件号码: %s", comName, applicant.Code))
 
 	bsqr := doc.AddParagraph()
 	bsqr.Properties().SetAlignment(wml.ST_JcLeft)
@@ -549,16 +551,20 @@ func readexecleToPerson(filepath string) []Person {
 	// 读取Excel文件
 	execle, err := excelize.OpenFile(filepath)
 	if err != nil {
-		log.Fatalf("打开execl文件失败: %s", err)
+		log.Printf("打开execl文件失败: %s", err)
 	}
 	defer execle.Close()
 	sheet := execle.GetSheetName(0)
 	rows, err := execle.GetRows(sheet)
 	if err != nil {
-		log.Panicln(err)
+		log.Println(err)
 	}
 	for rowIndex, row := range rows {
 		if rowIndex == 0 {
+			continue
+		}
+		if len(row) < 4 {
+			log.Printf("第%d行数据不足，跳过此行", rowIndex+1)
 			continue
 		}
 		name := row[0]

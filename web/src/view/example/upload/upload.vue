@@ -9,6 +9,10 @@
           :image-common="imageCommon"
           @on-success="getTableData"
         />
+        <upload-xlsx
+          :image-xlsx="imageXlsx"
+          @on-success="getTableData"
+        />
         <upload-image
           :image-url="imageUrl"
           :file-size="512"
@@ -127,6 +131,7 @@ import { downloadImage } from '@/utils/downloadImg'
 import CustomPic from '@/components/customPic/index.vue'
 import UploadImage from '@/components/upload/image.vue'
 import UploadCommon from '@/components/upload/common.vue'
+import UploadXlsx from '@/components/upload/xlsx.vue'
 import { formatDate } from '@/utils/format'
 import WarningBar from '@/components/warningBar/warningBar.vue'
 
@@ -141,6 +146,8 @@ const path = ref(import.meta.env.VITE_BASE_API)
 
 const imageUrl = ref('')
 const imageCommon = ref('')
+const imageXlsx = ref('')
+
 
 const page = ref(1)
 const total = ref(0)
