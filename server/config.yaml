@@ -69,7 +69,7 @@ email:
     is-ssl: true
 esign:
     base-url: https://smlopenapi.esign.cn
-    open-id: "7439012567"
+    open-id: 7439012567
     secret: c0d5ea7e936a53d515938cd5dabcba37
 excel:
     dir: ./resource/excel/

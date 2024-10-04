@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"reflect"
 	"strings"
+	"time"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -79,4 +80,41 @@ func RandomString(n int) string {
 
 func RandomInt(min, max int) int {
 	return min + rand.Intn(max-min)
+}
+
+// FormatTime 将给定的时间字符串格式化为 "2024年10月03日零时" 格式
+func FormatTime(originalTime *time.Time) (string, error) {
+	if originalTime == nil {
+		return "", fmt.Errorf("originalTime is nil")
+	}
+
+	// 转换到本地时区
+	localTime := originalTime.In(time.Local)
+
+	// 获取零时的时间
+	zeroTime := time.Date(localTime.Year(), localTime.Month(), localTime.Day(), 0, 0, 0, 0, localTime.Location())
+
+	// 格式化时间
+	formattedTime := zeroTime.Format("2006年01月02日零时")
+
+	return formattedTime, nil
+}
+
+func GenerateOrderID(sequence int) string {
+	// 获取当前时间
+	currentTime := time.Now()
+
+	// 获取日期部分
+	datePart := currentTime.Format("20060102")
+
+	// 获取时间部分
+	timePart := currentTime.Format("150405")
+
+	// 格式化序列号
+	sequencePart := fmt.Sprintf("%06d", sequence)
+
+	// 组合订单编号
+	orderID := fmt.Sprintf("P1100C024%s%s%s", datePart, timePart, sequencePart)
+
+	return orderID
 }

@@ -2,11 +2,16 @@ package cms
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pauljohn21/cms-gva/server/global"
 	"github.com/pauljohn21/cms-gva/server/model/cms"
 	cmsReq "github.com/pauljohn21/cms-gva/server/model/cms/request"
 	"github.com/pauljohn21/cms-gva/server/model/common/response"
+	Model "github.com/pauljohn21/cms-gva/server/model/esgin"
 	"github.com/pauljohn21/cms-gva/server/service"
 	"github.com/pauljohn21/cms-gva/server/service/esgin"
 	"github.com/pauljohn21/cms-gva/server/utils"
@@ -27,6 +32,12 @@ var meLetterService = service.ServiceGroupApp.CmsServiceGroup.MeLetterService
 // @Success 200 {object} response.Response{msg=string} "创建成功"
 // @Router /meLetter/createMeLetter [post]
 func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
+	// 获取当前工作目录
+	currentDir, _ := os.Getwd()
+
+	dataPath := filepath.Join(currentDir, "resource/doc/demo.docx")
+	fmt.Println(dataPath)
+
 	var meLetter cms.MeLetter
 	err := c.ShouldBindJSON(&meLetter)
 	if err != nil {
@@ -36,9 +47,77 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	fmt.Println(meLetter)
 
 	meLetter.CreatedBy = utils.GetUserID(c)
-	page, err := esgin.CrateTemplate(&meLetter)
-	fmt.Printf("签章页%d", page)
+	pages, _ := esgin.CrateTemplate(&meLetter)
+	fmt.Printf("签章页%d", pages)
 
+	contentMd5, size := utils.CountFileMd5(dataPath)
+	fileUploadUrlInfo := Model.FileUploadUrlInfo{
+		ContentMd5:   contentMd5,
+		ContentType:  "application/octet-stream",
+		ConvertToPDF: true,
+		FileName:     "测试0925.docx",
+		FileSize:     size,
+	}
+	initResult := esgin.GetFileUploadUrl(fileUploadUrlInfo)
+	fmt.Println("文件id", initResult.Data.FileId)
+	fmt.Println("文件下载", initResult.Data.FileUploadUrl)
+	rest := utils.UpLoadFile(initResult.Data.FileUploadUrl, dataPath, contentMd5, "application/octet-stream")
+	fmt.Println(rest)
+	meLetter.FileID = initResult.Data.FileId
+
+	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
+
+	flow := Model.SignFlowModel{
+		Docs: []Model.Docs{
+			{
+				FileId:   initResult.Data.FileId,
+				FileName: "测试合同.pdf",
+			},
+		},
+		SignFlowConfig: Model.SignFlowConfig{
+			SignFlowTitle: "测试合同",
+			AutoFinish:    true,
+			NotifyUrl:     "",
+		},
+		Signers: []Model.Signers{
+			{
+				SignerType: 1,
+
+				SignFields: []Model.SignFields{
+					{
+						FileId: initResult.Data.FileId,
+						NormalSignFieldConfig: Model.NormalSignFieldConfig{
+							FreeMode:       false,
+							AutoSign:       true,
+							AssignedSealId: "1aec676a-74e6-4319-9467-c86e09c5521a",
+							SignFieldStyle: "1",
+							SignFieldPosition: Model.SignFieldPosition{
+								AcrossPageMode: "0",
+								PositionPage:   "3",
+								PositionX:      480,
+								PositionY:      110,
+							},
+						},
+						SignDateConfig: Model.SignDateConfig{
+							ShowSignDate: 1,
+							DateFormat:   "yyyy年MM月dd日",
+							// SignDatePositionX: 360,
+							// SignDatePositionY: 80,
+						},
+					},
+				},
+			},
+		},
+	}
+	// 创建签署流程-start
+	flowresult := esgin.SignFlowCreateByFile(flow)
+	fmt.Println("创建签署流程：--------------")
+	fmt.Println(flowresult.Data.SignFlowId)
+	// 创建签署流程-end
+	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
+
+	FlowId := esgin.SignFlowFileDownloadUrl(flowresult.Data.SignFlowId)
+	meLetter.TemplateFileUrl = FlowId.Data.Files[0].DownloadUrl
 	if err := meLetterService.CreateMeLetter(&meLetter); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)

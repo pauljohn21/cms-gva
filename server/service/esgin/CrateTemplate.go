@@ -8,6 +8,7 @@ import (
 
 	"github.com/pauljohn21/cms-gva/server/global"
 	"github.com/pauljohn21/cms-gva/server/model/cms"
+	"github.com/pauljohn21/cms-gva/server/utils"
 
 	"github.com/xuri/excelize/v2"
 
@@ -36,14 +37,24 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 		fmt.Println(err)
 	}
 	fmt.Printf("信用代码%s\n", applicant.Code)
+	var sid *cms.MeLetter
+
+	global.GVA_DB.Last(&sid, "id")
+	pids := utils.GenerateOrderID(int(sid.ID))
+	fmt.Println(pids)
+	meLetter.Code = pids
+
+	startTime, _ := utils.FormatTime(meLetter.StartCreatedAt)
+	endTime, _ := utils.FormatTime(meLetter.EndCreatedAt)
 
 	var namelist string
 	for _, item := range data {
 		namelist += fmt.Sprintf("%s,", item.Name)
 	}
-	bszh := meLetter.Coverage
+	bszh := meLetter.CoverageAllNzh
+	fmt.Println("大写", bszh)
 	bszh_lower := meLetter.CoverageAll
-	bczrdata := fmt.Sprintf("财产保全保障人: %s与%s,因金融不良债权追偿纠纷案向法院提出财产保全申请,申请冻结被申请人名下价值人民币 %s(小写:RMB %s)的银行存款,微信支付余额和微信支付功能,支付宝支付余额和支付宝支付功能以及其他等值货币资金如因申请人财产保全申请错误致使被申请人遭受经济损失,依法应由申请人承担的损害赔偿责任保险人承担连带赔偿责任,赔偿限额以人民币 %s (小写: RMB %s)为限", comName, namelist, bszh, bszh_lower, bszh, bszh_lower)
+	bczrdata := fmt.Sprintf("财产保全保障人: %s与%s,因金融不良债权追偿纠纷案向法院提出财产保全申请,申请冻结被申请人名下价值人民币 %s元整 (小写:RMB %s)的银行存款,微信支付余额和微信支付功能,支付宝支付余额和支付宝支付功能以及其他等值货币资金如因申请人财产保全申请错误致使被申请人遭受经济损失,依法应由申请人承担的损害赔偿责任保险人承担连带赔偿责任,赔偿限额以人民币 %s元整 (小写: RMB %s)为限", comName, namelist, bszh, bszh_lower, bszh, bszh_lower)
 	tbrddata := `  	1.投保人/被保险人将诚实谨慎行使诉讼权利保证无恶意诉讼或虚假诉讼的故意且与被告、被申请人无恶意串通。包括但不限于:		
 	1.1 在合同有效期内保险标的的危险程度显著增加的（包括但不限于被申请人提供的证据足以推翻或动摇投保人/被保险人诉请的主要或关键事实的、一审法院作出不利于投保人/被保险人的判决等)，投保人/被保险人应当按照合同约定及时通知保险人；					
 	1.2 应当解除保全措施情况发生后投保人/被保险人应及时解除财产保全措施；												
@@ -97,8 +108,9 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	pidf.Properties().SetBold(true)
 	pidf.AddText("保单号: ")
 	pidi := pid.AddRun()
+	pidi.Properties().SetSize(12)
 	pidi.Properties().SetBold(false)
-	pidi.AddText("123456789")
+	pidi.AddText(pids)
 
 	fyid := doc.AddParagraph()
 	fyid.Properties().SetAlignment(wml.ST_JcLeft)
@@ -109,18 +121,20 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	fyidf.AddTab()
 	fyidi := fyid.AddRun()
 	fyidi.Properties().SetBold(false)
+	fyidi.Properties().SetSize(12)
 	fyidi.AddText(meLetter.Court)
 
 	bcr := doc.AddParagraph()
-	bcr.Properties().SetAlignment(wml.ST_JcLeft)
+	bcr.Properties().SetAlignment(wml.ST_JcBoth)
 	bcr.Properties().SetStyle("Heading2")
 	bcrf := bcr.AddRun()
 	bcrf.Properties().SetBold(true)
 	bcrf.AddText("财产保全申请人:	")
 	bcrf.AddTab()
 	bcri := bcr.AddRun()
+	bcri.Properties().SetSize(12)
 	bcri.Properties().SetBold(false)
-	bcri.AddText(fmt.Sprintf("%s, 				证件类型: 统一社会信用代码, 证件号码: %s", comName, applicant.Code))
+	bcri.AddText(fmt.Sprintf("%s, 						证件类型: 统一社会信用代码, 证件号码: %s", comName, applicant.Code))
 
 	bsqr := doc.AddParagraph()
 	bsqr.Properties().SetAlignment(wml.ST_JcLeft)
@@ -146,23 +160,71 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	}
 
 	doc.AddParagraph()
-	bcj := doc.AddParagraph()
-	bcj.Properties().SetAlignment(wml.ST_JcLeft)
-	bcj.AddRun().AddText(fmt.Sprintf("保险金额:   人民币 %s (小写L RMB %s)", bszh, bszh_lower))
+	bcjr := doc.AddParagraph()
+	bcjr.Properties().SetAlignment(wml.ST_JcLeft)
+	bcjr.Properties().SetStyle("Heading2")
+	bcjrf := bcjr.AddRun()
+	bcjrf.Properties().SetBold(true)
+	bcjrf.AddText("保险金额:	")
+	bcjri := bcjr.AddRun()
+	bcjri.Properties().SetBold(false)
+	bcjri.Properties().SetSize(12)
+	bcjri.AddText(fmt.Sprintf("%s 元整 (小写: RMB %s)", bszh, bszh_lower))
 
 	doc.AddParagraph()
 	bxzr := doc.AddParagraph()
 	bxzr.Properties().SetAlignment(wml.ST_JcLeft)
-	bxzr.AddRun().AddText("保险责任: ")
+	bxzr.Properties().SetStyle("Heading2")
+	bxzrf := bxzr.AddRun()
+	bxzrf.Properties().SetBold(true)
+	bxzrf.AddText("保险责任: ")
 	bxzrl := doc.AddParagraph()
 	bxzrl.Properties().SetStartIndent(60)
 	bxzrl.Properties().SetAlignment(wml.ST_JcBoth)
 	bxzrl.AddRun().AddText(bczrdata)
-	// // Create a new section and apply the header
 
+	doc.AddParagraph()
+	bxqj := doc.AddParagraph()
+	bxqj.Properties().SetAlignment(wml.ST_JcLeft)
+	bxqj.Properties().SetStyle("Heading2")
+	bxqjf := bxqj.AddRun()
+	bxqjf.Properties().SetBold(true)
+	bxqjf.AddText("保险期间:	")
+	bxqji := bxqj.AddRun()
+	bxqji.Properties().SetBold(false)
+	bxqji.Properties().SetSize(12)
+	bxqji.AddText(fmt.Sprintf("自 %s 起至 %s 止", startTime, endTime))
+
+	doc.AddParagraph()
+	hsbf := doc.AddParagraph()
+	hsbf.Properties().SetAlignment(wml.ST_JcLeft)
+	hsbf.Properties().SetStyle("Heading2")
+	hsbff := hsbf.AddRun()
+	hsbff.Properties().SetBold(true)
+	hsbff.AddText("含税总保费:	")
+	hsbfi := hsbf.AddRun()
+	hsbfi.Properties().SetBold(false)
+	hsbfi.Properties().SetSize(12)
+	hsbfi.AddText(fmt.Sprintf("%s 元整 (小写: RMB %s)", meLetter.CoverageNzh, meLetter.Coverage))
+
+	doc.AddParagraph()
+	shtk := doc.AddParagraph()
+	shtk.Properties().SetAlignment(wml.ST_JcLeft)
+	shtk.Properties().SetStyle("Heading2")
+	shtkf := shtk.AddRun()
+	shtkf.Properties().SetBold(true)
+	shtkf.AddText("适用条款:	")
+	shtki := shtk.AddRun()
+	shtki.Properties().SetBold(false)
+	shtki.Properties().SetSize(12)
+	shtki.AddText("诉讼财产保全责任险条款")
+
+	doc.AddParagraph()
 	tbrd1 := doc.AddParagraph()
 	tbrd1.Properties().SetAlignment(wml.ST_JcLeft)
-	tbrd1.AddRun().AddText("特别约定: ")
+	tbrd2 := tbrd1.AddRun()
+	tbrd2.Properties().SetBold(true)
+	tbrd2.AddText("特别约定: ")
 	tbrd := doc.AddParagraph()
 	tbrd.Properties().SetStartIndent(60)
 	tbrd.Properties().SetAlignment(wml.ST_JcBoth)

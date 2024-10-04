@@ -102,6 +102,7 @@ func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (Res[
 	log.Println("请求参数JSON字符串:" + dataJsonStr)
 	httpUrl := global.GVA_CONFIG.Esign.BaseURL + apiUrl
 	log.Println("发送地址: " + httpUrl)
+	log.Println("openid", global.GVA_CONFIG.Esign.OpenID)
 	md5Str := DohashMd5(dataJsonStr)
 	message := AppendSignDataString(method, "*/*", md5Str, "application/json; charset=UTF-8", "", "", apiUrl)
 	reqSignature := DoSignatureBase64(message, global.GVA_CONFIG.Esign.Secret)

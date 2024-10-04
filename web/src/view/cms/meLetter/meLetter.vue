@@ -156,7 +156,6 @@
           prop="info"
           width="120"
         />
-        <!--        <el-table-column align="left" label="投保人" prop="policyholder" width="120" />-->
         <el-table-column
           align="left"
           label="签署状态"
@@ -186,6 +185,23 @@
           min-width="240"
         >
           <template #default="scope">
+            <el-table-column
+              align="left"
+              label="合同下载"
+              prop="templateFileUrl"
+              width="120"
+            >
+              <template #default="scope">
+                <el-link
+                  :href="scope.row.templateFileUrl"
+                  target="_blank"
+                  :download="`${scope.row.code}_contract.pdf`"
+                  type="primary"
+                  >下载合同</el-link
+                >
+              </template>
+            </el-table-column>
+
             <el-button
               type="primary"
               link
@@ -194,6 +210,7 @@
               @click="updateMeLetterFunc(scope.row)"
               >变更</el-button
             >
+
             <el-button
               type="primary"
               link
@@ -241,7 +258,6 @@
         label-width="80px"
       >
         <el-form-item label="申请人:" prop="applicant">
-          <!--              <el-input v-model="formData.applicant" :clearable="true"  placeholder="请输入申请人" />-->
           <el-select
             v-model="formData.policyholder"
             placeholder="请选择申请人"
@@ -270,11 +286,9 @@
               :value="item.company"
             />
           </el-select>
-          <!--              <el-input v-model="formData.policyholder" :clearable="true"  placeholder="请输入投保人" />-->
         </el-form-item>
         <el-form-item label="被申请人:" prop="respondent">
           <UploadXlsx @on-success="onFileUploaded" />
-          <!-- <el-input v-model="formData.respondent" :clearable="true"  placeholder="请输入被申请人" /> -->
         </el-form-item>
 
         <el-form-item label="法院:" prop="court">
@@ -321,21 +335,21 @@
                 })
             "
           />
-          <el-form-item label="开始时间:" prop="startCreatedAt">
-            <el-date-picker
-              v-model="formData.startCreatedAt"
-              type="date"
-              style="width: 100%"
-              placeholder="选择日期"
-              :clearable="true"
-            />
-          </el-form-item>
+        </el-form-item>
+        <el-form-item label="开始时间:" prop="startCreatedAt">
+          <el-date-picker
+            v-model="formData.startCreatedAt"
+            type="date"
+            style="width: 30%"
+            placeholder="选择日期"
+            :clearable="true"
+          />
         </el-form-item>
         <el-form-item label="结束时间:" prop="endCreatedAt">
           <el-date-picker
             v-model="formData.endCreatedAt"
             type="date"
-            style="width: 100%"
+            style="width: 30%"
             placeholder="选择日期"
             :clearable="true"
           />
@@ -384,7 +398,7 @@ import {
   onDownloadFile,
 } from "@/utils/format";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive , watch} from "vue";
+import { ref, reactive, watch } from "vue";
 import { getContactsList } from "@/api/cms/contacts";
 import { getApplicantList } from "@/api/cms/applicant";
 import { getCourtList } from "@/api/cms/court";
@@ -512,6 +526,18 @@ const rule = reactive({
     {
       whitespace: true,
       message: "不能只输入空格",
+      trigger: ["input", "blur"],
+    },
+  ],
+  respondent: [
+    {
+      required: true,
+      message: "",
+      trigger: ["input", "blur"],
+    },
+    {
+      whitespace: true,
+      message: "没的上传文件",
       trigger: ["input", "blur"],
     },
   ],
@@ -761,14 +787,20 @@ const enterDialog = async () => {
 // // 调用这个方法来执行转换
 // convertCoverageToChinese();
 // 监听 coverage 的变化并转换为中文大写
-watch(() => formData.value.coverage, (newCoverage) => {
-  formData.value.coveragenzh = nzhcn.encodeB(newCoverage);
-});
-watch(() => formData.value.coverageAll, (newCoverage) => {
-  formData.value.coverageAllnzh = nzhcn.encodeB(newCoverage);
-});
+watch(
+  () => formData.value.coverage,
+  (newCoverage) => {
+    formData.value.coveragenzh = nzhcn.encodeB(newCoverage);
+  }
+);
+watch(
+  () => formData.value.coverageAll,
+  (newCoverageall) => {
+    formData.value.coverageAllnzh = nzhcn.encodeB(newCoverageall);
+  }
+);
 console.log(formData.value.coveragenzh);
-
+console.log(formData.value.coverageAllnzh);
 </script>
 
 <style></style>

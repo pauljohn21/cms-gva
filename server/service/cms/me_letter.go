@@ -70,7 +70,7 @@ func (meLetterService *MeLetterService) GetMeLetterInfoList(info cmsReq.MeLetter
 	var meLetters []cms.MeLetter
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
-		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt)
+		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt).Distinct()
 	}
 	err = db.Count(&total).Error
 	if err != nil {
