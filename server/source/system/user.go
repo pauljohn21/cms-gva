@@ -60,15 +60,15 @@ func (i *initUser) InitializeData(ctx context.Context) (next context.Context, er
 			UUID:        uuid.Must(uuid.NewV4()),
 			Username:    "admin",
 			Password:    adminPassword,
-			NickName:    "Mr.奇淼",
+			NickName:    "Mr.Admin",
 			HeaderImg:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
 			AuthorityId: 888,
-			Phone:       "17611111111",
+			Phone:       "15600000000",
 			Email:       "333333333@qq.com",
 		},
 		{
 			UUID:        uuid.Must(uuid.NewV4()),
-			Username:    "a303176530",
+			Username:    "test01",
 			Password:    password,
 			NickName:    "用户1",
 			HeaderImg:   "https:///qmplusimg.henrongyi.top/1572075907logo.png",
@@ -100,7 +100,7 @@ func (i *initUser) DataInserted(ctx context.Context) bool {
 		return false
 	}
 	var record sysModel.SysUser
-	if errors.Is(db.Where("username = ?", "a303176530").
+	if errors.Is(db.Where("username = ?", "test01").
 		Preload("Authorities").First(&record).Error, gorm.ErrRecordNotFound) { // 判断是否存在数据
 		return false
 	}
