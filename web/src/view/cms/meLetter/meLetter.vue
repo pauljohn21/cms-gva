@@ -190,7 +190,8 @@
               type="primary"
               link
               @click="downloadFile(scope.row)"
-            >下载合同</el-button>
+              >下载合同</el-button
+            >
 
             <el-button
               type="primary"
@@ -794,10 +795,7 @@ console.log(formData.value.coverageAllnzh);
 
 const downloadFile = (row) => {
   onDownloadFile(row.templateFileUrl);
-
 };
-
-
 </script>
 
 <style></style>
