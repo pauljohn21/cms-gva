@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/pauljohn21/cms-gva/server/global"
-	"github.com/pauljohn21/cms-gva/server/model/cms"
 	"github.com/pauljohn21/cms-gva/server/model/example"
 	"github.com/pauljohn21/cms-gva/server/model/system"
 
@@ -49,10 +48,6 @@ func RegisterTables() {
 		example.ExaCustomer{},
 		example.ExaFileChunk{},
 		example.ExaFileUploadAndDownload{},
-		cms.Applicant{},
-		cms.Contacts{},
-		cms.Court{},
-		cms.MeLetter{},
 	)
 	if err != nil {
 		global.GVA_LOG.Error("register table failed", zap.Error(err))
