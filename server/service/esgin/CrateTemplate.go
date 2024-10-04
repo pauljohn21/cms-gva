@@ -16,13 +16,13 @@ import (
 	"github.com/Esword618/unioffice/schema/soo/wml"
 )
 
-func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
+func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	fmt.Println("开始生成模板")
 	// 获取当前工作目录
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error getting current directory:", err)
-		return 0, err
+		return 0, "", err
 	}
 	// 拼接文件路径
 	dataPath := filepath.Join(currentDir, meLetter.Respondent)
@@ -592,12 +592,14 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, error) {
 	totalParagraphs := len(doc.Paragraphs())
 	endpages := totalParagraphs - (pages * estimatedPages)
 	fmt.Println(endpages)
+	savepath := filepath.Join(currentDir, "resource/doc/demo.docx")
+	fmt.Println(savepath)
 
-	err = doc.SaveToFile("resource/doc/demo.docx")
+	err = doc.SaveToFile(savepath)
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
-	return estimatedPages, nil
+	return estimatedPages, pids, nil
 }
 
 type Person struct {

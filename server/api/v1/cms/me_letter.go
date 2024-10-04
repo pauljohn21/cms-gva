@@ -15,6 +15,7 @@ import (
 	"github.com/pauljohn21/cms-gva/server/service"
 	"github.com/pauljohn21/cms-gva/server/service/esgin"
 	"github.com/pauljohn21/cms-gva/server/utils"
+	"github.com/pauljohn21/cms-gva/server/utils/upload"
 	"go.uber.org/zap"
 )
 
@@ -47,7 +48,7 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	fmt.Println(meLetter)
 
 	meLetter.CreatedBy = utils.GetUserID(c)
-	pages, _ := esgin.CrateTemplate(&meLetter)
+	pages, pids, _ := esgin.CrateTemplate(&meLetter)
 	fmt.Printf("签章页%d", pages)
 
 	contentMd5, size := utils.CountFileMd5(dataPath)
@@ -55,7 +56,7 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 		ContentMd5:   contentMd5,
 		ContentType:  "application/octet-stream",
 		ConvertToPDF: true,
-		FileName:     "测试0925.docx",
+		FileName:     fmt.Sprintf("%s.docx", pids),
 		FileSize:     size,
 	}
 	initResult := esgin.GetFileUploadUrl(fileUploadUrlInfo)
@@ -117,7 +118,8 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
 
 	FlowId := esgin.SignFlowFileDownloadUrl(flowresult.Data.SignFlowId)
-	meLetter.TemplateFileUrl = FlowId.Data.Files[0].DownloadUrl
+	filename := upload.DownloadFile(FlowId.Data.Files[0].DownloadUrl, fmt.Sprintf("%s.pdf", pids))
+	meLetter.TemplateFileUrl = filename
 	if err := meLetterService.CreateMeLetter(&meLetter); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)

@@ -185,22 +185,12 @@
           min-width="240"
         >
           <template #default="scope">
-            <el-table-column
-              align="left"
-              label="合同下载"
-              prop="templateFileUrl"
-              width="120"
-            >
-              <template #default="scope">
-                <el-link
-                  :href="scope.row.templateFileUrl"
-                  target="_blank"
-                  :download="`${scope.row.code}_contract.pdf`"
-                  type="primary"
-                  >下载合同</el-link
-                >
-              </template>
-            </el-table-column>
+            <el-button
+              icon="download"
+              type="primary"
+              link
+              @click="downloadFile(scope.row)"
+            >下载合同</el-button>
 
             <el-button
               type="primary"
@@ -801,6 +791,13 @@ watch(
 );
 console.log(formData.value.coveragenzh);
 console.log(formData.value.coverageAllnzh);
+
+const downloadFile = (row) => {
+  onDownloadFile(row.templateFileUrl);
+
+};
+
+
 </script>
 
 <style></style>

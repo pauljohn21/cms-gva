@@ -2,8 +2,10 @@ package upload
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -83,4 +85,35 @@ func (*Local) DeleteFile(key string) error {
 		}
 	}
 	return nil
+}
+
+func DownloadFile(url string, filenames string) string {
+	filename := global.GVA_CONFIG.Local.StorePath + "/pdf/" + filenames
+	// 打开或创建本地文件
+	file, err := os.Create(filename)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	// 发起HTTP GET请求获取资源
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	// 检查响应状态码是否为200 (OK)
+	if resp.StatusCode != http.StatusOK {
+		panic(fmt.Sprintf("Failed to download file: %s", resp.Status))
+	}
+
+	// 将远程资源复制到本地文件
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Downloaded %s to %s\n", url, filename)
+	return filename
 }
