@@ -85,6 +85,10 @@
           @click="onDelete"
           >删除</el-button
         >
+        <ExportTemplate
+          template-id="respondent"
+        />
+        
       </div>
       <el-table
         ref="multipleTable"
@@ -394,6 +398,7 @@ import { getContactsList } from "@/api/cms/contacts";
 import { getApplicantList } from "@/api/cms/applicant";
 import { getCourtList } from "@/api/cms/court";
 import UploadXlsx from "@/components/upload/xlsx.vue";
+import ExportTemplate from "@/components/exportExcel/exportTemplate.vue";
 
 import {
   addThousandSeparatorForElementPlus,
