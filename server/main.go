@@ -13,7 +13,7 @@ import (
 //go:generate go env -w GOPROXY=https://goproxy.cn,direct
 //go:generate go mod tidy
 //go:generate go mod download
-//go:generate CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+//go:generate GOOS=linux GOARCH=amd64 go build
 
 // @title                       cms-gva Swagger API接口文档
 // @version                     v0.0.1

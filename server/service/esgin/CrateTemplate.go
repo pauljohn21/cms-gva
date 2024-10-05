@@ -16,13 +16,13 @@ import (
 	"github.com/Esword618/unioffice/schema/soo/wml"
 )
 
-func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
+func CrateTemplate(meLetter *cms.MeLetter) (string, error) {
 	fmt.Println("开始生成模板")
 	// 获取当前工作目录
 	currentDir, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error getting current directory:", err)
-		return 0, "", err
+		return "", err
 	}
 	// 拼接文件路径
 	dataPath := filepath.Join(currentDir, meLetter.Respondent)
@@ -84,6 +84,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	parahdr1.Properties().SetAlignment(wml.ST_JcRight)
 	runhdr1.Properties().SetSize(10)
 	runhdr1.AddText("Heilongjiang Xinshizheng Financing Guarantee Co., Ltd")
+	hdr.AddParagraph()
 
 	// Construct our footer
 
@@ -296,6 +297,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf.Properties().SetSize(12)
 	bczrf.Properties().SetBold(true)
 	bczrf.AddText("保险责任")
+	doc.AddParagraph()
 
 	td5 := doc.AddParagraph()
 	td5.Properties().SetAlignment(wml.ST_JcLeft)
@@ -305,6 +307,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td5i := td5.AddRun()
 	td5i.Properties().SetBold(false)
 	td5i.AddText(" 在保险期间内，被保险人向人民法院或仲裁机构提出诉讼财产保全申请并经人民法院裁定同意，如因申请错误致使被申请人遭受损失，由被申请人另行提起诉讼财产保全损害责任纠纷诉讼，经人民法院生效判决认定申请人应承担损害赔偿责任的，保险人根据本条款的规定不可抗辩地在赔偿限额内承担赔偿责任")
+	doc.AddParagraph()
 
 	bczr1 := doc.AddParagraph()
 	bczr1.Properties().SetAlignment(wml.ST_JcCenter)
@@ -312,6 +315,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf1.Properties().SetSize(12)
 	bczrf1.Properties().SetBold(true)
 	bczrf1.AddText("责任免除")
+	doc.AddParagraph()
 
 	td6 := doc.AddParagraph()
 	td6.Properties().SetAlignment(wml.ST_JcLeft)
@@ -321,6 +325,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td6i := td6.AddRun()
 	td6i.Properties().SetBold(false)
 	td6i.AddText("依据法院判决被保险人无需承担的经济损失，保险人不负责赔偿。")
+	doc.AddParagraph()
 
 	bczr2 := doc.AddParagraph()
 	bczr2.Properties().SetAlignment(wml.ST_JcCenter)
@@ -328,6 +333,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf2.Properties().SetSize(12)
 	bczrf2.Properties().SetBold(true)
 	bczrf2.AddText("赔偿限额")
+	doc.AddParagraph()
 
 	td7 := doc.AddParagraph()
 	td7.Properties().SetAlignment(wml.ST_JcLeft)
@@ -337,6 +343,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td7i := td7.AddRun()
 	td7i.Properties().SetBold(false)
 	td7i.AddText("本保险的赔偿限额为诉讼财产保全的申请保全金额，具体以保险单上载明的保险金额为准。")
+	doc.AddParagraph()
 
 	bczr3 := doc.AddParagraph()
 	bczr3.Properties().SetAlignment(wml.ST_JcCenter)
@@ -344,6 +351,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf3.Properties().SetSize(12)
 	bczrf3.Properties().SetBold(true)
 	bczrf3.AddText("保险期间")
+	doc.AddParagraph()
 
 	td8 := doc.AddParagraph()
 	td8.Properties().SetAlignment(wml.ST_JcLeft)
@@ -353,6 +361,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td8i := td8.AddRun()
 	td8i.Properties().SetBold(false)
 	td8i.AddText("本保险的保险期间为自被保险人向法院提出诉讼财产保全申请之日起至保全损害之债诉讼时效届满时终止。")
+	doc.AddParagraph()
 
 	bczr4 := doc.AddParagraph()
 	bczr4.Properties().SetAlignment(wml.ST_JcCenter)
@@ -360,6 +369,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf4.Properties().SetSize(12)
 	bczrf4.Properties().SetBold(true)
 	bczrf4.AddText("保险人义务")
+	doc.AddParagraph()
 
 	td9 := doc.AddParagraph()
 	td9.Properties().SetAlignment(wml.ST_JcLeft)
@@ -399,6 +409,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td12i := td12.AddRun()
 	td12i.Properties().SetBold(false)
 	td12i.AddText(`保险人收到被保险人的赔偿保险金的请求后，应当及时做出是否属于保险责任的核定；情况复杂的，应当在三十日内做出核定，但因索赔人原因、客观原因、事故情况异常复杂、需要查证、需要等待第三方意见等原因需要更长处理时间的除外。																	保险人应当将核定的结果通知被保险人；对属于保险责任的，在与被保险人达成赔偿保险金的协议后十日内，履行赔偿保险金的义务。本保险合同对赔偿保险金的期限有约定的，保险人应当按照约定履行赔偿保险金的义务。保险人依照前款的规定做出核定后，对不属于保险责任的，应当自做出核定之日起三日内向被保险人发出拒绝赔偿保险金的通知书，并说明理由。`)
+	doc.AddParagraph()
 
 	bczr5 := doc.AddParagraph()
 	bczr5.Properties().SetAlignment(wml.ST_JcCenter)
@@ -406,6 +417,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf5.Properties().SetSize(12)
 	bczrf5.Properties().SetBold(true)
 	bczrf5.AddText("投保人、被保险人义务")
+	doc.AddParagraph()
 
 	td13 := doc.AddParagraph()
 	td13.Properties().SetAlignment(wml.ST_JcLeft)
@@ -475,6 +487,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td19i := td19.AddRun()
 	td19i.Properties().SetBold(false)
 	td19i.AddText("订立保险合同前后，投保人和被保险人应及时提供和补充提供涉及保险合同载明的民事诉讼案件的诉讼材料，包括但不限于：							（一）起诉书、立案通知书、答辩状；									（二）诉讼财产保全申请书（副本）；								（三）相关证据及鉴定文件；										（四）调解书、判决书或裁定书。")
+	doc.AddParagraph()
 
 	bczr6 := doc.AddParagraph()
 	bczr6.Properties().SetAlignment(wml.ST_JcCenter)
@@ -482,6 +495,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf6.Properties().SetSize(12)
 	bczrf6.Properties().SetBold(true)
 	bczrf6.AddText("赔偿处理")
+	doc.AddParagraph()
 
 	td20 := doc.AddParagraph()
 	td20.Properties().SetAlignment(wml.ST_JcLeft)
@@ -531,6 +545,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td24i := td24.AddRun()
 	td24i.Properties().SetBold(false)
 	td24i.AddText("被保险人向保险人请求赔偿保险金的诉讼时效依法律规定，自其知道或者应当知道保险事故发生之日起计算。")
+	doc.AddParagraph()
 
 	bczr7 := doc.AddParagraph()
 	bczr7.Properties().SetAlignment(wml.ST_JcCenter)
@@ -538,6 +553,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf7.Properties().SetSize(12)
 	bczrf7.Properties().SetBold(true)
 	bczrf7.AddText("争议处理和法律适用")
+	doc.AddParagraph()
 
 	td25 := doc.AddParagraph()
 	td25.Properties().SetAlignment(wml.ST_JcLeft)
@@ -557,6 +573,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td26i := td26.AddRun()
 	td26i.Properties().SetBold(false)
 	td26i.AddText("本保险合同的争议处理适用中华人民共和国法律（不包括港澳台地区法律）。")
+	doc.AddParagraph()
 
 	bczr8 := doc.AddParagraph()
 	bczr8.Properties().SetAlignment(wml.ST_JcCenter)
@@ -564,6 +581,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf8.Properties().SetSize(12)
 	bczrf8.Properties().SetBold(true)
 	bczrf8.AddText("其他事项")
+	doc.AddParagraph()
 
 	td27 := doc.AddParagraph()
 	td27.Properties().SetAlignment(wml.ST_JcLeft)
@@ -573,6 +591,7 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	td27i := td27.AddRun()
 	td27i.Properties().SetBold(false)
 	td27i.AddText("除法院驳回申请人诉讼财产保全申请外，本保险合同投保人不得退保。")
+	doc.AddParagraph()
 
 	bczr9 := doc.AddParagraph()
 	bczr9.Properties().SetAlignment(wml.ST_JcCenter)
@@ -580,26 +599,21 @@ func CrateTemplate(meLetter *cms.MeLetter) (int, string, error) {
 	bczrf9.Properties().SetSize(12)
 	bczrf9.Properties().SetBold(true)
 	bczrf9.AddText("释义")
+	doc.AddParagraph()
 
 	tde := doc.AddParagraph()
 	tde.Properties().SetAlignment(wml.ST_JcCenter)
 	tdef := tde.AddRun()
 	tdef.AddText("【保全损害之债】是指在诉讼财产保全中被申请人针对申请人错误保全造成的损失而享有的损害请求权")
 
-	pages := 60
-	estimatedPages := len(doc.Paragraphs()) / pages
-	fmt.Println(estimatedPages)
-	totalParagraphs := len(doc.Paragraphs())
-	endpages := totalParagraphs - (pages * estimatedPages)
-	fmt.Println(endpages)
 	savepath := filepath.Join(currentDir, "resource/doc/demo.docx")
 	fmt.Println(savepath)
 
 	err = doc.SaveToFile(savepath)
 	if err != nil {
-		return 0, "", err
+		return "", err
 	}
-	return estimatedPages, pids, nil
+	return pids, nil
 }
 
 type Person struct {

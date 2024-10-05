@@ -20,6 +20,11 @@ type Res[T any] struct {
 	Data    T      `json:"data"`
 }
 
+type FileUploadUrlReq struct {
+	ErrCode int32  `json:"errCode"`
+	Msg     string `json:"msg"`
+}
+
 // ParseResponse 是一个假定存在的函数，用于将 byte 切片转换为目标类型 Res[T]。
 func ParseResponse[T any](body []byte) (Res[T], error) {
 	var res Res[T]
@@ -67,7 +72,8 @@ func SendHttp[T any](apiUrl string, data string, method string, headers map[stri
 }
 
 // 文件上传
-func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentType string) string {
+func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentType string) (bool, error) {
+	var res FileUploadUrlReq
 	// 创建一个缓冲区对象,后面的要上传的body都存在这个缓冲区里
 	bodyBuf := &bytes.Buffer{}
 	// 要上传的文件
@@ -92,10 +98,18 @@ func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentTyp
 	// 发送数据
 	data, _ := client.Do(req)
 	// 读取请求返回的数据
-	bytes, _ := io.ReadAll(data.Body)
+	body, _ := io.ReadAll(data.Body)
 	defer data.Body.Close()
 	// 返回数据
-	return string(bytes)
+
+	if err := json.Unmarshal(body, &res); err != nil {
+		return false, fmt.Errorf("无法解析响应体: %v", err)
+	}
+	if res.ErrCode != 0 {
+		return false, fmt.Errorf("上传文件失败: %v", res.Msg)
+	} else {
+		return true, nil
+	}
 }
 
 func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (Res[T], error) {

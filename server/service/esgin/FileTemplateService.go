@@ -2,13 +2,14 @@ package esgin
 
 import (
 	"encoding/json"
-	"github.com/pauljohn21/cms-gva/server/model/esgin"
 	"log"
+
+	"github.com/pauljohn21/cms-gva/server/model/esgin"
 
 	Tools "github.com/pauljohn21/cms-gva/server/utils"
 )
 
-func GetFileUploadUrl(data esgin.FileUploadUrlInfo) Tools.Res[esgin.FileTemplatereq] {
+func GetFileUploadUrl(data esgin.FileUploadUrlInfo) (Tools.Res[esgin.FileTemplatereq], error) {
 	apiUrl := "/v3/files/file-upload-url"
 	log.Println("获取文件上传地址：--------------")
 	var dataJsonStr string
@@ -20,5 +21,17 @@ func GetFileUploadUrl(data esgin.FileUploadUrlInfo) Tools.Res[esgin.FileTemplate
 	log.Println(initResult)
 	log.Println("错误信息：-----------------------")
 	log.Println(err)
-	return initResult
+	return initResult, err
+}
+
+func GetFileUploadUrlInfo(fileid string) (Tools.Res[esgin.GetFileUploadStatusRes], error) {
+	apiUrl := "/v3/files/" + fileid
+	log.Println("获取文件上传地址：--------------")
+
+	initResult, err := Tools.SendCommHttp[esgin.GetFileUploadStatusRes](apiUrl, "", "GET")
+	log.Println("返回参数：------------------")
+	log.Println(initResult)
+	log.Println("错误信息：-----------------------")
+	log.Println(err)
+	return initResult, err
 }

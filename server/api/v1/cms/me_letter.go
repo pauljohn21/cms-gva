@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -48,9 +49,12 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	fmt.Println(meLetter)
 
 	meLetter.CreatedBy = utils.GetUserID(c)
-	pages, pids, _ := esgin.CrateTemplate(&meLetter)
-	fmt.Printf("签章页%d", pages)
-
+	pids, err := esgin.CrateTemplate(&meLetter)
+	if err != nil {
+		global.GVA_LOG.Error("创建模板失败", zap.Error(err))
+		response.FailWithMessage("创建模板失败", c)
+		return
+	}
 	contentMd5, size := utils.CountFileMd5(dataPath)
 	fileUploadUrlInfo := Model.FileUploadUrlInfo{
 		ContentMd5:   contentMd5,
@@ -59,15 +63,29 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 		FileName:     fmt.Sprintf("%s.docx", pids),
 		FileSize:     size,
 	}
-	initResult := esgin.GetFileUploadUrl(fileUploadUrlInfo)
+	initResult, err := esgin.GetFileUploadUrl(fileUploadUrlInfo)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
 	fmt.Println("文件id", initResult.Data.FileId)
 	fmt.Println("文件下载", initResult.Data.FileUploadUrl)
-	rest := utils.UpLoadFile(initResult.Data.FileUploadUrl, dataPath, contentMd5, "application/octet-stream")
-	fmt.Println(rest)
+	rest, err := utils.UpLoadFile(initResult.Data.FileUploadUrl, dataPath, contentMd5, "application/octet-stream")
+	if err != nil {
+		global.GVA_LOG.Error("文件上传失败", zap.Error(err))
+		response.FailWithMessage("文件上传失败", c)
+	}
+	if !rest {
+		global.GVA_LOG.Error("文件上传失败")
+		response.FailWithMessage("文件上传失败", c)
+
+	}
 	meLetter.FileID = initResult.Data.FileId
 
 	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
-
+	pagenub, _ := esgin.GetFileUploadUrlInfo(initResult.Data.FileId)
+	fmt.Println(pagenub.Data.FileTotalPageCount)
+	pages := pagenub.Data.FileTotalPageCount - 4
 	flow := Model.SignFlowModel{
 		Docs: []Model.Docs{
 			{
@@ -94,7 +112,7 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 							SignFieldStyle: "1",
 							SignFieldPosition: Model.SignFieldPosition{
 								AcrossPageMode: "0",
-								PositionPage:   "3",
+								PositionPage:   strconv.FormatInt(int64(pages), 10),
 								PositionX:      480,
 								PositionY:      110,
 							},
