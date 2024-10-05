@@ -240,6 +240,7 @@
           <span class="text-lg">{{ type === "create" ? "添加" : "修改" }}</span>
           <div>
             <el-button type="primary" @click="enterDialog">确 定</el-button>
+
             <el-button @click="closeDialog">取 消</el-button>
           </div>
         </div>
@@ -392,7 +393,7 @@ import {
   ReturnArrImg,
   onDownloadFile,
 } from "@/utils/format";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox,ElLoading } from "element-plus";
 import { ref, reactive, watch } from "vue";
 import { getContactsList } from "@/api/cms/contacts";
 import { getApplicantList } from "@/api/cms/applicant";
@@ -768,6 +769,7 @@ const enterDialog = async () => {
         type: "success",
         message: "创建/更改成功",
       });
+      openFullScreen2();
       closeDialog();
       getTableData();
     }
@@ -801,6 +803,16 @@ console.log(formData.value.coverageAllnzh);
 const downloadFile = (row) => {
   onDownloadFile(row.templateFileUrl);
 };
+const openFullScreen2 = () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: '签署中...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  setTimeout(() => {
+    loading.close()
+  }, 10000)
+}
 </script>
 
 <style></style>

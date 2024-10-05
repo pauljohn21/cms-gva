@@ -102,6 +102,7 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 
 	pages := strconv.FormatInt(int64(PageResult-4), 10)
 	global.GVA_LOG.Info("签署文件页数", zap.Any("签署文件页数:", pages))
+	time.Sleep(5 * time.Second)
 
 	// 创建签署流程-start
 
@@ -151,7 +152,6 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	fmt.Println("创建签署流程：--------------")
 	fmt.Println(flowresult.Data.SignFlowId)
 	var flowUrl string
-	// time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
 	for {
 		FlowId, err := esgin.SignFlowFileDownloadUrl(flowresult.Data.SignFlowId)
 		if err != nil {

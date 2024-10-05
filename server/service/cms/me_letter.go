@@ -66,11 +66,11 @@ func (meLetterService *MeLetterService) GetMeLetterInfoList(info cmsReq.MeLetter
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	db := global.GVA_DB.Model(&cms.MeLetter{})
+	db := global.GVA_DB.Model(&cms.MeLetter{}).Order("id desc")
 	var meLetters []cms.MeLetter
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
-		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt).Distinct()
+		db = db.Where("created_at BETWEEN ? AND ?", info.StartCreatedAt, info.EndCreatedAt)
 	}
 	err = db.Count(&total).Error
 	if err != nil {
