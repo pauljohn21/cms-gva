@@ -65,11 +65,14 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 	}
 	initResult, err := esgin.GetFileUploadUrl(fileUploadUrlInfo)
 	if err != nil {
+		global.GVA_LOG.Error("文件md5上传失败", zap.Error(err))
+
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	fmt.Println("文件id", initResult.Data.FileId)
-	fmt.Println("文件下载", initResult.Data.FileUploadUrl)
+	global.GVA_LOG.Info("文件上传id", zap.Any("文件上传id", initResult.Data.FileId))
+	global.GVA_LOG.Info("文件上传URL", zap.Any("文件上传URL", initResult.Data.FileUploadUrl))
+
 	rest, err := utils.UpLoadFile(initResult.Data.FileUploadUrl, dataPath, contentMd5, "application/octet-stream")
 	if err != nil {
 		global.GVA_LOG.Error("文件上传失败", zap.Error(err))
@@ -80,12 +83,28 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 		response.FailWithMessage("文件上传失败", c)
 
 	}
-	meLetter.FileID = initResult.Data.FileId
+	var PageResult int32
 
-	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
-	pagenub, _ := esgin.GetFileUploadUrlInfo(initResult.Data.FileId)
-	fmt.Println(pagenub.Data.FileTotalPageCount)
-	pages := pagenub.Data.FileTotalPageCount - 4
+	meLetter.FileID = initResult.Data.FileId
+	for {
+		pageNumber, err := esgin.GetFileUploadUrlInfo(initResult.Data.FileId)
+		if err != nil {
+			global.GVA_LOG.Error("文件上传失败", zap.Error(err))
+			response.FailWithMessage("文件上传失败", c)
+		}
+		if pageNumber.Data.FileStatus == 5 {
+			PageResult = pageNumber.Data.FileTotalPageCount
+			break
+		}
+
+		time.Sleep(1 * time.Second)
+	}
+
+	pages := strconv.FormatInt(int64(PageResult-4), 10)
+	global.GVA_LOG.Info("签署文件页数", zap.Any("签署文件页数:", pages))
+
+	// 创建签署流程-start
+
 	flow := Model.SignFlowModel{
 		Docs: []Model.Docs{
 			{
@@ -112,7 +131,7 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 							SignFieldStyle: "1",
 							SignFieldPosition: Model.SignFieldPosition{
 								AcrossPageMode: "0",
-								PositionPage:   strconv.FormatInt(int64(pages), 10),
+								PositionPage:   pages,
 								PositionX:      480,
 								PositionY:      110,
 							},
@@ -128,16 +147,31 @@ func (meLetterApi *MeLetterApi) CreateMeLetter(c *gin.Context) {
 			},
 		},
 	}
-	// 创建签署流程-start
 	flowresult := esgin.SignFlowCreateByFile(flow)
 	fmt.Println("创建签署流程：--------------")
 	fmt.Println(flowresult.Data.SignFlowId)
-	// 创建签署流程-end
-	time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
+	var flowUrl string
+	// time.Sleep(10 * time.Second) // 添加等待时间， 10 秒
+	for {
+		FlowId, err := esgin.SignFlowFileDownloadUrl(flowresult.Data.SignFlowId)
+		if err != nil {
+			global.GVA_LOG.Error("文件上传失败", zap.Error(err))
+			response.FailWithMessage("文件上传失败", c)
+		}
+		if FlowId.Code == 0 {
+			flowUrl = FlowId.Data.Files[0].DownloadUrl
+			break
+		}
 
-	FlowId := esgin.SignFlowFileDownloadUrl(flowresult.Data.SignFlowId)
-	filename := upload.DownloadFile(FlowId.Data.Files[0].DownloadUrl, fmt.Sprintf("%s.pdf", pids))
+		time.Sleep(1 * time.Second)
+	}
+	fmt.Println(flowUrl)
+
+	filename := upload.DownloadFile(flowUrl, fmt.Sprintf("%s.pdf", pids))
+
 	meLetter.TemplateFileUrl = filename
+	// 创建签署流程-end
+
 	if err := meLetterService.CreateMeLetter(&meLetter); err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)

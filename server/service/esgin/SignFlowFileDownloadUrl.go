@@ -8,7 +8,7 @@ import (
 	Tools "github.com/pauljohn21/cms-gva/server/utils"
 )
 
-func SignFlowFileDownloadUrl(signFlowId string) Tools.Res[esgin.SignFlowFileDownloadUrl] {
+func SignFlowFileDownloadUrl(signFlowId string) (Tools.Res[esgin.SignFlowFileDownloadUrl], error) {
 	apiUrl := fmt.Sprintf("/v3/sign-flow/%s/file-download-url", signFlowId)
 	log.Println("创建签署流程：--------------")
 	// var dataJsonStr string
@@ -20,5 +20,5 @@ func SignFlowFileDownloadUrl(signFlowId string) Tools.Res[esgin.SignFlowFileDown
 	log.Println(initResult)
 	log.Println("错误信息：-----------------------")
 	log.Println(err)
-	return initResult
+	return initResult, err
 }

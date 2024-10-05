@@ -6,7 +6,7 @@ import (
 )
 
 func TestGetJSONKeys(t *testing.T) {
-	var jsonStr = `
+	jsonStr := `
 	{
 		"Name": "test",
 		"TableName": "test",
