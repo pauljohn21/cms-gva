@@ -196,7 +196,7 @@
               @click="downloadFile(scope.row)"
               >下载合同</el-button
             >
-
+<!-- 
             <el-button
               type="primary"
               link
@@ -212,7 +212,7 @@
               icon="delete"
               @click="deleteRow(scope.row)"
               >删除</el-button
-            >
+            > -->
           </template>
         </el-table-column>
       </el-table>
